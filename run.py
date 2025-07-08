@@ -9,9 +9,9 @@ from camera_stream import CameraStream
 from producer import FrameProducer
 from workers import FaceWorker, DetectWorker
 
-def run_system():
+def run_system(cam_index=None):
     stop_event = threading.Event()
-    camera = CameraStream()
+    camera = CameraStream(cam_index=cam_index)
 
     detect_queue = Queue(maxsize=config.DETECT_QUEUE_SIZE)
     face_queue = Queue(maxsize=config.FACE_QUEUE_SIZE)
@@ -109,8 +109,10 @@ def main():
             target_packager.run()
 
     else:
-
-        run_system()
+        if args.cam != None:
+            run_system(cam_index = args.cam)
+        else:
+            run_system()
 
 if __name__ == "__main__":
     main()
