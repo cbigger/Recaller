@@ -2,8 +2,9 @@ import threading
 from queue import Queue
 from camera_stream import CameraStream
 from producer import FrameProducer
-from face_worker import FaceWorker
-from detect_worker import DetectWorker
+from workers import FaceWorker, DetectWorker
+#from face_worker import FaceWorker
+#from detect_worker import DetectWorker
 import config
 
 def run_system():

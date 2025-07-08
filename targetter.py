@@ -117,7 +117,6 @@ class FaceTrainer:
         images = []
         labels = []
         for filename in os.listdir(folder):
-#            if filename.endswith
             path = os.path.join(folder, filename)
             img = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
             if img is None:
@@ -145,29 +144,3 @@ class FaceTrainer:
             test_img_resized = cv2.resize(test_img, self.face_size)
             label, confidence = self.recognizer.predict(test_img_resized)
             print(f"[TEST] {filename}: predicted label={label}, confidence={confidence:.2f}")
-
-'''
-def main():
-    parser = argparse.ArgumentParser(description="Extract face crops from images using YOLO-based detection.")
-    parser.add_argument("--build_test", action="store_true", help="Export to off-target face dataset instead of target set.")
-    parser.add_argument("--no_nms", action="store_true", help="Export to off-target face dataset instead of target set.")
-    args = parser.parse_args()
-
-    input_dir = config.INPUT_DIR
-    output_dir = config.OUTPUT_DIR
-
-    if args.build_test:
-        input_dir = config.OFFTARGET_INPUT_DIR
-        output_dir = config.OFFTARGET_OUTPUT_DIR
-        packager = FacePackager(input_dir, output_dir, nms_mode=True)
-    elif args.no_nms:
-        packager = FacePackager(input_dir, output_dir, nms_mode=False)
-    else:
-        packager = FacePackager(input_dir, output_dir, nms_mode=True)
-
-    packager.run()
-
-
-if __name__ == "__main__":
-    main()
-'''
