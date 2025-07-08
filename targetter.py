@@ -7,11 +7,12 @@ import config
 ### TARGETTER MODE CLASSES
 class FacePackager:
     """
-    This script is used with targetting mode to extract faces from still images and store them for training or testing.
+    This class is used with targetting mode to extract faces from still images and store them for training or testing.
     It accepts an argument to turn off NMS which will allow overlapping detections (as in, it will pull multiple crops, usually max of two,
     from a single image/face.)
     """
     def __init__(self, input_dir, output_dir, confidence_threshold=0.5, face_class_id=1, nms_mode=True):
+
         self.input_dir = input_dir
         self.output_dir = output_dir
         self.confidence_threshold = confidence_threshold
@@ -97,10 +98,17 @@ class FacePackager:
 
 
 class FaceTrainer:
-    def __init__(self, train_dir="target", test_dir="offtarget", model_path="target/face_model.xml", face_size=(150, 150), label_id=1):
+    """
+    This class handles the building and testing of target packages. It probably needs to be merged into a unified class with the above.
+    Parameters:
+    train_dir == target, the directory holding the processed bounded faces of the target
+    test_dir  == offtarget, the directory holding the processed bounded faces to test against
+    face_model_output_path == target as well.
+    """
+    def __init__(self, train_dir, test_dir, face_model_output_path, face_size=(150, 150), label_id=1):
         self.train_dir = train_dir
         self.test_dir = test_dir
-        self.model_path = model_path
+        self.face_model_output_path = face_model_output_path #+ "/target_face.xml"
         self.face_size = face_size
         self.label_id = label_id
         self.recognizer = cv2.face.LBPHFaceRecognizer_create()
@@ -109,6 +117,7 @@ class FaceTrainer:
         images = []
         labels = []
         for filename in os.listdir(folder):
+#            if filename.endswith
             path = os.path.join(folder, filename)
             img = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
             if img is None:
@@ -122,8 +131,8 @@ class FaceTrainer:
         print("[INFO] Loading training data...")
         train_images, train_labels = self.load_images_from_folder(self.train_dir, self.label_id)
         self.recognizer.train(train_images, np.array(train_labels))
-        self.recognizer.save(self.model_path)
-        print(f"[INFO] Model trained and saved to {self.model_path}")
+        self.recognizer.save(self.face_model_output_path)
+        print(f"[INFO] Model trained and saved to {self.face_model_output_path}")
 
     def test(self):
         print("[INFO] Testing recognition on test images...")
@@ -137,8 +146,7 @@ class FaceTrainer:
             label, confidence = self.recognizer.predict(test_img_resized)
             print(f"[TEST] {filename}: predicted label={label}, confidence={confidence:.2f}")
 
-
-
+'''
 def main():
     parser = argparse.ArgumentParser(description="Extract face crops from images using YOLO-based detection.")
     parser.add_argument("--build_test", action="store_true", help="Export to off-target face dataset instead of target set.")
@@ -162,3 +170,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+'''
