@@ -13,6 +13,10 @@ DETECT_NAMES_PATH = "models/people-r-people.names"
 RECOG_CFG_PATH = "models/people-r-people.cfg"
 RECOG_WEIGHTS_PATH = "models/people-r-people.weights"
 RECOG_NAMES_PATH = "models/people-r-people.names"
-# TARGET CONFIGURATION
-## Sooooooooo this is I guess where we would be loading the "owner" data for the facial recog.
-## which i think would be based on the recog so might end up putting it there.
+# TARGETTER CONFIGURATION
+INPUT_DIR = "target/raw"        # Directory with full unprocessed images of target
+OUTPUT_DIR = "target"      # Where to save the detected and cropped faces of the target
+OFFTARGET_INPUT_DIR = "offtarget/raw"  # same as above but for images that well be used for testing recog rates.
+OFFTARGET_OUTPUT_DIR = "offtarget"
+CONFIDENCE_THRESHOLD = 0.5
+FACE_CLASS_ID = 1

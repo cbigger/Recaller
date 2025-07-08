@@ -10,14 +10,14 @@ def run_system():
     stop_event = threading.Event()
     camera = CameraStream()
 
-    face_queue = Queue(maxsize=config.FACE_QUEUE_SIZE)
     detect_queue = Queue(maxsize=config.DETECT_QUEUE_SIZE)
+    face_queue = Queue(maxsize=config.FACE_QUEUE_SIZE)
 
-    producer = FrameProducer(camera, [face_queue, detect_queue], stop_event)
+    producer = FrameProducer(camera, [detect_queue], stop_event)
+    detect_worker = DetectWorker(detect_queue, stop_event, face_output_queue=face_queue, name="DetectWorker")
     face_worker = FaceWorker(face_queue, stop_event, name="FaceWorker")
-    detect_worker = DetectWorker(detect_queue, stop_event, name="DetectWorker")
 
-    threads = [producer, face_worker, detect_worker]
+    threads = [producer, detect_worker, face_worker]
     for t in threads:
         t.start()
 
